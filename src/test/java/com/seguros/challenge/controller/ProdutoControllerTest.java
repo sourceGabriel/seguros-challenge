@@ -37,7 +37,7 @@ class ProdutoControllerTest {
         when(calcularPrecoTarifadoUseCase.inserePrecoTarifado(any(Produto.class))).thenReturn(produto);
         when(produtoEntityMapper.toDomain(any(ProdutoEntity.class))).thenReturn(produto);
 
-        ResponseEntity<?> responseEntity = produtoController.criarProduto(produtoEntity);
+        ResponseEntity<?> responseEntity = produtoController.criarProduto(produto);
 
         assertNotNull(responseEntity);
         assertEquals(ResponseEntity.ok(produto), responseEntity);
@@ -53,7 +53,7 @@ class ProdutoControllerTest {
         when(calcularPrecoTarifadoUseCase.atualizaPrecoTarifado(any(Produto.class))).thenReturn(produto);
         when(produtoEntityMapper.toDomain(any(ProdutoEntity.class))).thenReturn(produto);
 
-        ResponseEntity<?> responseEntity = produtoController.atualizarProduto(id, produtoEntity);
+        ResponseEntity<?> responseEntity = produtoController.atualizarProduto(id, produto);
 
         assertNotNull(responseEntity);
         assertEquals(ResponseEntity.ok(produto), responseEntity);

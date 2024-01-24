@@ -20,15 +20,14 @@ public class ProdutoController {
     private final ProdutoEntityMapper produtoEntityMapper;
 
     @Autowired
-    public ProdutoController(CalculaPrecoTarifadoUseCase calcularPrecoTarifadoUseCase, ProdutoGateway produtoGateway, ProdutoEntityMapper produtoEntityMapper) {
+    public ProdutoController(CalculaPrecoTarifadoUseCase calcularPrecoTarifadoUseCase, ProdutoEntityMapper produtoEntityMapper) {
         this.calcularPrecoTarifadoUseCase = calcularPrecoTarifadoUseCase;
         this.produtoEntityMapper = produtoEntityMapper;
     }
 
     @PostMapping
-    public ResponseEntity<?> criarProduto(@RequestBody ProdutoEntity produtoEntity) {
+    public ResponseEntity<?> criarProduto(@RequestBody Produto produto) {
 
-            Produto produto = produtoEntityMapper.toDomain(produtoEntity);
             produto = calcularPrecoTarifadoUseCase.inserePrecoTarifado(produto);
 
             return ResponseEntity.ok(produto);
@@ -36,9 +35,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarProduto(@PathVariable String id, @Validated @RequestBody ProdutoEntity produtoEntity) {
-
-        Produto produto = produtoEntityMapper.toDomain(produtoEntity);
+    public ResponseEntity<?> atualizarProduto(@PathVariable String id, @Validated @RequestBody Produto produto) {
         produto.setId(id);
 
         Produto produtoTarfifado = calcularPrecoTarifadoUseCase.atualizaPrecoTarifado(produto);
