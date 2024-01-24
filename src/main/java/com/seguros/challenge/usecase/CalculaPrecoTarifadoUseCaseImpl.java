@@ -28,6 +28,7 @@ public class CalculaPrecoTarifadoUseCaseImpl implements CalculaPrecoTarifadoUseC
 
         validateRequest(produto);
         Double precoTarifado = calculaPrecoUtils.calculaPrecoTarifado(produto);
+        logger.info("Preco tarifado calculado: {}", precoTarifado);
 
         produto.setPrecoTarifado(precoTarifado);
         if (produto.getId() == null) {
@@ -42,9 +43,9 @@ public class CalculaPrecoTarifadoUseCaseImpl implements CalculaPrecoTarifadoUseC
     public Produto atualizaPrecoTarifado(Produto produto) {
 
         validateRequest(produto);
-        Produto produtoExistente = produtoGateway.procuraPorId(produto.getId());
 
         Double precoTarifado = calculaPrecoUtils.calculaPrecoTarifado(produto);
+        logger.info("Novo preco tarifado calculado: {}", precoTarifado);
         produto.setPrecoTarifado(precoTarifado);
 
         produtoGateway.salvarOuAtualizar(produto);

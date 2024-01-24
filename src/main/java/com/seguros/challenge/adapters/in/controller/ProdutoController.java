@@ -29,7 +29,7 @@ public class ProdutoController {
     public ResponseEntity<?> criarProduto(@RequestBody Produto produto) {
 
             produto = calcularPrecoTarifadoUseCase.inserePrecoTarifado(produto);
-
+            logger.info("produto criado com sucesso: {}", produto);
             return ResponseEntity.ok(produto);
 
     }
@@ -38,8 +38,9 @@ public class ProdutoController {
     public ResponseEntity<?> atualizarProduto(@PathVariable String id, @Validated @RequestBody Produto produto) {
         produto.setId(id);
 
-        Produto produtoTarfifado = calcularPrecoTarifadoUseCase.atualizaPrecoTarifado(produto);
+        Produto produtoTarifado = calcularPrecoTarifadoUseCase.atualizaPrecoTarifado(produto);
+        logger.info("produto atualizado com sucesso: {}", produto);
 
-        return ResponseEntity.ok(produtoTarfifado);
+        return ResponseEntity.ok(produtoTarifado);
     }
 }
