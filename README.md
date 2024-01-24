@@ -128,3 +128,6 @@ Execute os testes de integração com o seguinte comando:
 ```bash
 ./mvnw test
 ```
+
+## Cobertura de Testes
+### [Para visualizar a cobertura de testes clique aqui](https://sourcegabriel.github.io/seguros-challenge/).
