@@ -131,5 +131,6 @@ Execute os testes de integração com o seguinte comando:
 ```
 
 ## Cobertura de Testes
+[![Cobertura de Testes](target/site/jacoco/index.html)](target/site/jacoco/index.html)
 
-![Cobertura de Testes](https://sourcegabriel.github.io/seguros-challenge/)
+https://sourcegabriel.github.io/seguros-challenge/
