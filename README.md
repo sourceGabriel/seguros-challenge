@@ -121,6 +121,13 @@ Atualiza produto de seguro. O preço do produto será calculado utilizando o cas
   "preco_tarifado": 106.00
 }
 ```
+**Exemplo de retornos de erros**
+
+```json
+400 Categoria de seguro desconhecida: viagemm
+
+400 Campos nome, precoBase e categoria devem estar preenchidos
+```
 Testes de Integração
 Este projeto inclui testes de integração usando o framework JUnit e o Spring Boot Test. 
 Execute os testes de integração com o seguinte comando:

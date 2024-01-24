@@ -1,34 +1,30 @@
 package com.seguros.challenge.usecase;
 
+import com.seguros.challenge.adapters.out.entity.ProdutoEntity;
 import com.seguros.challenge.domain.model.Produto;
-import com.seguros.challenge.gateway.ProdutoGateway;
-import com.seguros.challenge.gateway.ProdutoRepository;
-import com.seguros.challenge.utils.ImpostosUtils;
+import com.seguros.challenge.usecase.ports.ProdutoGateway;
+import com.seguros.challenge.utils.CalculaPrecoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CalculaPrecoTarifadoUseCaseImplTest {
-    private static final Logger logger = LoggerFactory.getLogger(CalculaPrecoTarifadoUseCaseImplTest.class);
 
     @Mock
-    private ImpostosUtils impostosUtils;
-
-    @Mock
-    private ProdutoRepository produtoRepository;
+    private CalculaPrecoUtils calculaPrecoUtils;
 
     @Mock
     private ProdutoGateway produtoGateway;
 
     @InjectMocks
-    private CalculaPrecoTarifadoUseCaseImpl useCase;
+    private CalculaPrecoTarifadoUseCaseImpl calculaPrecoTarifadoUseCase;
 
     @BeforeEach
     void setUp() {
@@ -36,52 +32,75 @@ class CalculaPrecoTarifadoUseCaseImplTest {
     }
 
     @Test
-    void calcularPrecoTarifadoSuccess() {
-        Produto produto = new Produto(null, "seguro vida","vida", 20.0,20.0);
-        produto.setPrecoBase(100.0);
-
-        double[] impostos = {0.1, 0.05, 0.07};
-        double precoTarifadoEsperado = 122.0;
-
-        when(impostosUtils.retornaImpostos(produto)).thenReturn(impostos);
-
-        Produto resultado = useCase.calcularPrecoTarifado(produto);
-
-        assertAll(
-                () -> assertEquals(precoTarifadoEsperado, resultado.getPrecoTarifado())
-        );
-    }
-
-    @Test
-    void calcularPrecoTarifadoComErro() {
-        Produto produto = new Produto();
-        produto.setPrecoBase(100.0);
-
-        when(impostosUtils.retornaImpostos(produto)).thenThrow(new RuntimeException("Erro ao calcular o preço tarifado para o produto"));
-
-        assertThrows(RuntimeException.class, () -> useCase.calcularPrecoTarifado(produto));
-
-    }
-
-    @Test
-    void testValidateRequestSuccess() {
+    void inserePrecoTarifado_DeveInserirPrecoTarifadoNoProdutoEChamarSalvarOuAtualizar() {
         // Arrange
-        Produto produto = new Produto();
-        produto.setNome("seguro de vida");
-        produto.setCategoria("vida");
-        produto.setPrecoBase(100.0);
+        Produto produto = new Produto("1", "Seguro de vida", "vida", 100.0, 120.0);
+        produto.setNome("Produto Teste");
+        produto.setPrecoBase(50.0);
+        produto.setCategoria("Categoria Teste");
+        ProdutoEntity produtoEntity = new ProdutoEntity();
+        when(calculaPrecoUtils.calculaPrecoTarifado(produto)).thenReturn(55.0);
+        when(produtoGateway.salvarOuAtualizar(produto)).thenReturn(produtoEntity);
 
-        Boolean result = useCase.validateRequest(produto);
+        // Act
+        Produto result = calculaPrecoTarifadoUseCase.inserePrecoTarifado(produto);
 
-        assertTrue(result);
+        // Assert
+        assertNotNull(result);
+        assertEquals(55.0, result.getPrecoTarifado());
+
+        // Verify
+        verify(calculaPrecoUtils, times(1)).calculaPrecoTarifado(produto);
+        verify(produtoGateway, times(1)).salvarOuAtualizar(produto);
     }
 
     @Test
-    void testValidateRequestNullCategoria() {
-        Produto produto = new Produto();
-        produto.setNome("seguro de vida");
-        produto.setPrecoBase(100.0);
+    void atualizaPrecoTarifado_DeveAtualizarPrecoTarifadoNoProdutoEChamarSalvarOuAtualizar() {
+        // Arrange
+        Produto produto = new Produto("1", "Seguro de vida", "vida", 100.0, 120.0);
+        produto.setId(UUID.randomUUID().toString());
+        produto.setNome("Produto Teste");
+        produto.setPrecoBase(50.0);
+        produto.setCategoria("Categoria Teste");
+        ProdutoEntity produtoEntity = new ProdutoEntity();
+        when(calculaPrecoUtils.calculaPrecoTarifado(produto)).thenReturn(55.0);
+        when(produtoGateway.procuraPorId(produto.getId())).thenReturn(produto);
+        when(produtoGateway.salvarOuAtualizar(produto)).thenReturn(produtoEntity);
 
-        assertThrows(IllegalArgumentException.class, () -> useCase.validateRequest(produto));
+        // Act
+        Produto result = calculaPrecoTarifadoUseCase.atualizaPrecoTarifado(produto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(55.0, result.getPrecoTarifado());
+
+        // Verify
+        verify(calculaPrecoUtils, times(1)).calculaPrecoTarifado(produto);
+        verify(produtoGateway, times(1)).procuraPorId(produto.getId());
+        verify(produtoGateway, times(1)).salvarOuAtualizar(produto);
+    }
+
+    @Test
+    void validateRequest_QuandoCamposInvalidos_DeveLancarExcecao() {
+        // Arrange
+        Produto produto = new Produto("1", "Seguro de vida", null, 100.0, 120.0);
+
+        // Act and Assert
+        assertThrows(IllegalArgumentException.class, () -> calculaPrecoTarifadoUseCase.validateRequest(produto));
+    }
+
+    @Test
+    void validateRequest_QuandoCamposValidos_DeveRetornarTrue() {
+        // Arrange
+        Produto produto = new Produto("1", "Seguro de vida", "vida", 100.0, 120.0);
+        produto.setNome("Produto Teste");
+        produto.setPrecoBase(50.0);
+        produto.setCategoria("Categoria Teste");
+
+        // Act
+        Boolean result = calculaPrecoTarifadoUseCase.validateRequest(produto);
+
+        // Assert
+        assertTrue(result);
     }
 }

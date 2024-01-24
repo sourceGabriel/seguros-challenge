@@ -10,7 +10,7 @@ public class ImpostosUtilsTest {
     public void testRetornaImpostosParaVida() {
         // Arrange
         ImpostosUtils impostosUtils = new ImpostosUtils();
-        Produto produto = new Produto();
+        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
         produto.setCategoria("VIDA");
 
         // Act
@@ -24,7 +24,7 @@ public class ImpostosUtilsTest {
     public void testRetornaImpostosParaAuto() {
         // Arrange
         ImpostosUtils impostosUtils = new ImpostosUtils();
-        Produto produto = new Produto();
+        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
         produto.setCategoria("AUTO");
 
         // Act
@@ -38,7 +38,7 @@ public class ImpostosUtilsTest {
     public void testRetornaImpostosParaViagem() {
         // Arrange
         ImpostosUtils impostosUtils = new ImpostosUtils();
-        Produto produto = new Produto();
+        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
         produto.setCategoria("VIAGEM");
 
         // Act
@@ -52,7 +52,7 @@ public class ImpostosUtilsTest {
     public void testRetornaImpostosParaResidencial() {
         // Arrange
         ImpostosUtils impostosUtils = new ImpostosUtils();
-        Produto produto = new Produto();
+        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
         produto.setCategoria("RESIDENCIAL");
 
         // Act
@@ -66,7 +66,7 @@ public class ImpostosUtilsTest {
     public void testRetornaImpostosParaPatrimonial() {
         // Arrange
         ImpostosUtils impostosUtils = new ImpostosUtils();
-        Produto produto = new Produto();
+        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
         produto.setCategoria("PATRIMONIAL");
 
         // Act
@@ -80,7 +80,7 @@ public class ImpostosUtilsTest {
     public void testRetornaImpostosParaCategoriaDesconhecida() {
         // Arrange
         ImpostosUtils impostosUtils = new ImpostosUtils();
-        Produto produto = new Produto();
+        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
         produto.setCategoria("CATEGORIA_DESCONHECIDA");
 
         // Assert

@@ -1,12 +1,10 @@
 package com.seguros.challenge.utils;
 
-import com.seguros.challenge.domain.model.CategoriaSeguro;
 import com.seguros.challenge.domain.model.Produto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ImpostosUtils implements CategoriaSeguro {
-    @Override
+public class ImpostosUtils {
     public double[] retornaImpostos(Produto produto) {
         switch (produto.getCategoria().toUpperCase()) {
             case "VIDA":
