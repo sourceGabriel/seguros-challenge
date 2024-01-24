@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+challenge,com.seguros.challenge.usecase,CalculaPrecoTarifadoUseCaseImpl,0,93,2,6,0,23,2,6,0,4
+challenge,com.seguros.challenge,ChallengeApplication,5,3,0,0,2,1,1,1,1,1
+challenge,com.seguros.challenge.gateway,ProdutoGatewayImpl,0,21,0,0,0,6,0,4,0,4
+challenge,com.seguros.challenge.controller,ProdutoController,0,91,0,2,0,24,0,6,0,5
+challenge,com.seguros.challenge.utils,ImpostosUtils,0,101,0,6,0,8,0,7,0,2
