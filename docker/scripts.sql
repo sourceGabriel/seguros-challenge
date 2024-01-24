@@ -1,8 +1,7 @@
-create IF NOT EXISTS database seguros;
-
+create database seguros;
 use seguros;
 
-CREATE TABLE IF NOT EXISTS produtos (
+CREATE TABLE produtos (
     id VARCHAR(36) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     categoria VARCHAR(255) NOT NULL,
