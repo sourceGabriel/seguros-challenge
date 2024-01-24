@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: seguros-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_USERNAME: root
+      MYSQL_DATABASE: seguro
+    ports:
+      - "3307:3307"
+    cap_add:
+      - SYS_NICE

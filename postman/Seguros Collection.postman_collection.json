@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "559a1ab3-7e81-4240-8a49-0a612910d5e0",
+		"name": "Seguros Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "9368366"
+	},
+	"item": [
+		{
+			"name": "Lista produto",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/produtos"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualiza produto",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Seguro viagem\",\r\n    \"categoria\": \"patrimonial\",\r\n    \"precoBase\": \"100.00\"\r\n}"
+				},
+				"url": "localhost:8080/produtos/7ced0713-d00a-4a34-86ee-de5d8ebaabdf"
+			},
+			"response": []
+		},
+		{
+			"name": "Cria produto",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Seguro viagem\",\r\n    \"categoria\": \"patrimonial\",\r\n    \"precoBase\": \"100.00\"\r\n}"
+				},
+				"url": "localhost:8080/produtos"
+			},
+			"response": []
+		}
+	]
+}
