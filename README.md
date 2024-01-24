@@ -22,6 +22,7 @@ Os impostos devem ser aplicados da seguinte forma:
 - Java 8 ou superior
 - Maven
 - Docker (opcional, para execução em contêiner)
+- MySQL
 
 ### Configuração do Ambiente
 
@@ -131,4 +132,4 @@ Execute os testes de integração com o seguinte comando:
 
 ## Cobertura de Testes
 
-[![Cobertura de Testes](https://sourcegabriel.github.io/seguros-challenge/)](target/site/jacoco/index.html)
+![Cobertura de Testes](https://sourcegabriel.github.io/seguros-challenge/)
