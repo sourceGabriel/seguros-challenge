@@ -128,3 +128,7 @@ Execute os testes de integração com o seguinte comando:
 ```bash
 ./mvnw test
 ```
+
+## Cobertura de Testes
+
+[![Cobertura de Testes](https://sourcegabriel.github.io/seguros-challenge/)](target/site/jacoco/index.html)
