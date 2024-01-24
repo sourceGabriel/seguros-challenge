@@ -7,27 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Lista produto",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "localhost:8080/produtos"
-			},
-			"response": []
-		},
-		{
 			"name": "Atualiza produto",
 			"request": {
 				"method": "PUT",
