@@ -1,57 +1,56 @@
 package com.seguros.challenge.usecase;
 
 import com.seguros.challenge.domain.model.Produto;
-import com.seguros.challenge.gateway.ProdutoGateway;
-import com.seguros.challenge.gateway.ProdutoRepository;
-import com.seguros.challenge.utils.ImpostosUtils;
+import com.seguros.challenge.usecase.ports.CalculaPrecoTarifadoUseCase;
+import com.seguros.challenge.usecase.ports.ProdutoGateway;
+import com.seguros.challenge.utils.CalculaPrecoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
 public class CalculaPrecoTarifadoUseCaseImpl implements CalculaPrecoTarifadoUseCase {
     private static final Logger logger = LoggerFactory.getLogger(CalculaPrecoTarifadoUseCaseImpl.class);
+    private final CalculaPrecoUtils calculaPrecoUtils;
 
-    private final ImpostosUtils impostosUtils;
-
-    private final ProdutoRepository produtoRepository;
     private final ProdutoGateway produtoGateway;
 
     @Autowired
-    public CalculaPrecoTarifadoUseCaseImpl(ImpostosUtils impostosUtils, ProdutoRepository produtoRepository, ProdutoGateway produtoGateway) {
-
-        this.impostosUtils = impostosUtils;
-        this.produtoRepository = produtoRepository;
+    public CalculaPrecoTarifadoUseCaseImpl(CalculaPrecoUtils calculaPrecoUtils, ProdutoGateway produtoGateway) {
+        this.calculaPrecoUtils = calculaPrecoUtils;
         this.produtoGateway = produtoGateway;
     }
 
     @Override
-    public Produto calcularPrecoTarifado(Produto produto) {
-        try {
+    public Produto inserePrecoTarifado(Produto produto) {
 
-            validateRequest(produto);
+        validateRequest(produto);
+        Double precoTarifado = calculaPrecoUtils.calculaPrecoTarifado(produto);
 
-            double precoBase = produto.getPrecoBase();
-            double[] impostos = impostosUtils.retornaImpostos(produto);
-
-            double iof = impostos[0];
-            double pis = impostos[1];
-            double cofins = impostos[2];
-            double precoTarifado = precoBase + (precoBase * iof) + (precoBase * pis) + (precoBase * cofins);
-
-            produto.setPrecoTarifado(precoTarifado);
-            if (produto.getId() == null) {
-                produto.setId(UUID.randomUUID().toString());
-            }
-
-            return produto;
-        } catch (Exception e) {
-            logger.error("Erro ao calcular o preço tarifado para o produto: {}", produto, e);
-            throw e;
+        produto.setPrecoTarifado(precoTarifado);
+        if (produto.getId() == null) {
+            produto.setId(UUID.randomUUID().toString());
         }
+        produtoGateway.salvarOuAtualizar(produto);
+
+        return produto;
+
+    }
+    @Override
+    public Produto atualizaPrecoTarifado(Produto produto) {
+
+        validateRequest(produto);
+        Produto produtoExistente = produtoGateway.procuraPorId(produto.getId());
+
+        Double precoTarifado = calculaPrecoUtils.calculaPrecoTarifado(produto);
+        produto.setPrecoTarifado(precoTarifado);
+
+        produtoGateway.salvarOuAtualizar(produto);
+
+        return produto;
+
     }
 
     Boolean validateRequest(Produto produto) {

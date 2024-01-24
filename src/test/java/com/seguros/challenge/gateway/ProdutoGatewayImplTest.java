@@ -1,21 +1,28 @@
 package com.seguros.challenge.gateway;
 
+import com.seguros.challenge.adapters.out.entity.ProdutoEntity;
+import com.seguros.challenge.adapters.out.gateway.ProdutoGatewayImpl;
+import com.seguros.challenge.adapters.out.gateway.ProdutoRepository;
+import com.seguros.challenge.adapters.out.mapper.ProdutoEntityMapper;
 import com.seguros.challenge.domain.model.Produto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class ProdutoGatewayImplTest {
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class ProdutoGatewayImplTest {
 
     @Mock
     private ProdutoRepository produtoRepository;
+
+    @Mock
+    private ProdutoEntityMapper produtoEntityMapper;
 
     @InjectMocks
     private ProdutoGatewayImpl produtoGateway;
@@ -26,55 +33,50 @@ public class ProdutoGatewayImplTest {
     }
 
     @Test
-    void testSalvarOuAtualizar() {
+    void salvarOuAtualizar_DeveRetornarProdutoEntitySalvo() {
+        Produto produto = new Produto("1", "Seguro de vida", "vida", 100.0, 120.0);
+        ProdutoEntity produtoEntity = new ProdutoEntity();
+
+        when(produtoEntityMapper.toEntity(produto)).thenReturn(produtoEntity);
+        when(produtoRepository.save(produtoEntity)).thenReturn(produtoEntity);
+
+        ProdutoEntity result = produtoGateway.salvarOuAtualizar(produto);
+
+        assertNotNull(result);
+        assertEquals(produtoEntity, result);
+
+        verify(produtoEntityMapper, times(1)).toEntity(produto);
+        verify(produtoRepository, times(1)).save(produtoEntity);
+    }
+
+    @Test
+    void procuraPorId_QuandoIdExistente_DeveRetornarProduto() {
         // Arrange
-        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
-        Mockito.when(produtoRepository.save(produto)).thenReturn(produto);
+        String id = "123";
+        ProdutoEntity produtoEntity = new ProdutoEntity();
+        Produto produto = new Produto("1", "Seguro de vida", "vida", 100.0, 120.0);
 
-        // Act
-        Produto result = produtoGateway.salvarOuAtualizar(produto);
+        when(produtoRepository.findById(id)).thenReturn(Optional.of(produtoEntity));
+        when(produtoEntityMapper.toDomain(produtoEntity)).thenReturn(produto);
 
-        // Assert
+        Produto result = produtoGateway.procuraPorId(id);
+
+        assertNotNull(result);
         assertEquals(produto, result);
-        Mockito.verify(produtoRepository, Mockito.times(1)).save(produto);
-    }
 
-
-    @Test
-    void testListarTodos() {
-        List<Produto> produtos = Arrays.asList(
-                new Produto("1", "Test Product", "Test Category", 100.0, 120.0),
-                new Produto("1", "Test Product", "Test Category", 100.0, 120.0)
-        );
-        Mockito.when(produtoRepository.findAll()).thenReturn(produtos);
-
-        List<Produto> result = produtoGateway.listarTodos();
-
-        assertEquals(produtos.size(), result.size());
-        Mockito.verify(produtoRepository, Mockito.times(1)).findAll();
+        verify(produtoRepository, times(1)).findById(id);
+        verify(produtoEntityMapper, times(1)).toDomain(produtoEntity);
     }
 
     @Test
-    void testProcuraPorId_Exists() {
-        String productId = "1";
-        Produto produto = new Produto("1", "Test Product", "Test Category", 100.0, 120.0);
-        Mockito.when(produtoRepository.findById(productId)).thenReturn(Optional.of(produto));
+    void procuraPorId_QuandoIdNaoExistente_DeveLancarExcecao() {
+        String id = "456";
 
-        Optional<Produto> result = produtoGateway.procuraPorId(productId);
+        when(produtoRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertTrue(result.isPresent());
-        assertEquals(produto, result.get());
-        Mockito.verify(produtoRepository, Mockito.times(1)).findById(productId);
-    }
+        assertThrows(IllegalArgumentException.class, () -> produtoGateway.procuraPorId(id));
 
-    @Test
-    void testProcuraPorId_NotExists() {
-        String productId = "1";
-        Mockito.when(produtoRepository.findById(productId)).thenReturn(Optional.empty());
-
-        Optional<Produto> result = produtoGateway.procuraPorId(productId);
-
-        assertFalse(result.isPresent());
-        Mockito.verify(produtoRepository, Mockito.times(1)).findById(productId);
+        verify(produtoRepository, times(1)).findById(id);
+        verify(produtoEntityMapper, never()).toDomain(any());
     }
 }
